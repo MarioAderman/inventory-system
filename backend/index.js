@@ -352,15 +352,50 @@ app.delete('/api/sales/:id', async (req, res) => {
 // 4. Inventory Value (FIFO) API
 app.get('/api/inventory-value', async (req, res) => {
   try {
-    const purchases = await pool.query('SELECT * FROM purchases ORDER BY purchase_date');
-    const sales = await pool.query('SELECT * FROM sales ORDER BY sale_date');
+    const purchasesRes = await pool.query(
+      `SELECT product_code, batch_id, quantity, cost_per_unit, purchase_date 
+       FROM purchases 
+       WHERE is_deleted = false 
+       ORDER BY purchase_date ASC`
+    );
 
-    // FIFO calculation logic here
-    let fifoValue = 0;
-    // ... (implement FIFO logic)
+    const salesRes = await pool.query(
+      `SELECT product_code, quantity, sale_date 
+       FROM sales 
+       WHERE is_deleted = false 
+       ORDER BY sale_date ASC`
+    );
 
-    res.json({ value: fifoValue });
+    const purchases = purchasesRes.rows;
+    const sales = salesRes.rows;
+
+    // Step 1: Organize data into FIFO-ready format
+    const fifoData = {};
+
+    for (const p of purchases) {
+      if (!fifoData[p.product_code]) {
+        fifoData[p.product_code] = { purchases: [], sales: [] };
+      }
+      fifoData[p.product_code].purchases.push({ 
+        batch_id: p.batch_id, 
+        quantity: p.quantity, 
+        cost_per_unit: p.cost_per_unit 
+      });
+    }
+
+    for (const s of sales) {
+      if (!fifoData[s.product_code]) {
+        fifoData[s.product_code] = { purchases: [], sales: [] };
+      }
+      fifoData[s.product_code].sales.push({
+        quantity: s.quantity
+      });
+    }
+
+    // Next step: Step 2 will use this fifoData object to compute remaining stock and COGS
+    res.json({ message: "Step 1 complete", fifoData }); // Temporary response for validation
   } catch (err) {
+    console.error("FIFO Inventory Error:", err);
     res.status(500).json({ error: err.message });
   }
 });
