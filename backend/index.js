@@ -388,7 +388,8 @@ app.get('/api/inventory-value', async (req, res) => {
         fifoData[s.product_code] = { purchases: [], sales: [] };
       }
       fifoData[s.product_code].sales.push({
-        quantity: s.quantity
+        quantity: s.quantity,
+        sold_price: s.sold_price
       });
     }
 

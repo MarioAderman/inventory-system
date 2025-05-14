@@ -65,6 +65,16 @@ function Sidebar() {
         >
           <span>Sales</span>
         </Link>
+        <Link 
+          to="/consult"
+          className={`flex items-center px-4 py-3 ${
+            currentPath === '/consult'
+              ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 border-l-4 border-blue-600' 
+              : 'hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200'
+          }`}
+        >
+          <span>Consult</span>
+        </Link>
       </nav>
       {/* Theme switcher button */}
       <div className="p-4 border-t dark:border-gray-700">

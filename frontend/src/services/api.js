@@ -22,7 +22,10 @@ export const addSale = (sale) => api.post('/sales', sale);
 export const updateSale = (id, data) => api.put(`/sales/${id}`, data);
 export const deleteSale = (id) => api.delete(`/sales/${id}`);
 
-// Endpoints for export CSV process
+// Endpoint for export CSV process
 export const exportCsv = (page) => api.get(`/export-csv?page=${page}`, { responseType: "blob" })
+
+// Endpoint for inventory value
+export const getInventoryValue = () => api.get(`/inventory-value`);
 
 export default api;

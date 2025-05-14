@@ -223,13 +223,13 @@ function Purchases() {
                           {batchIdConcat(purchase.batch_id)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
-                          {purchase.quantity}
+                          {purchase.original_quantity}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
                           ${((purchase.cost_per_unit || 0)).toFixed(2)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap dark:text-gray-300">
-                          ${(((purchase.cost_per_unit || 0) * purchase.quantity)).toFixed(2)}
+                          ${(((purchase.cost_per_unit || 0) * purchase.original_quantity)).toFixed(2)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button 
