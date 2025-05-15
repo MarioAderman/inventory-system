@@ -34,6 +34,8 @@ const Consult = () => {
     let totalProfit = 0;
     let totalCOGS = 0;
 
+    console.log(inventoryData.fifoData)
+
     Object.values(inventoryData.fifoData).forEach(({ purchases, sales }) => {
       let sold = [...sales];
       let fifoPurchases = [...purchases].sort((a, b) => a.batch_id - b.batch_id);
@@ -43,17 +45,24 @@ const Consult = () => {
         totalInventoryValue += batch.quantity * batch.cost_per_unit;
       });
 
+      console.log(sold.length)
+
       // Calculate COGS & Profit
       fifoPurchases.forEach(batch => {
         while (sold.length > 0 && batch.quantity > 0) {
           const sale = sold[0];
           const qtyToSell = Math.min(batch.quantity, sale.quantity);
 
+          console.log(qtyToSell)
+          console.log(batch.cost_per_unit)
+          console.log(sale.sold_price)
+
           totalCOGS += qtyToSell * batch.cost_per_unit;
 
-          // Assume sale price = cost + 30% for this example
-          const estimatedPrice = batch.cost_per_unit * 1.3;
-          totalProfit += qtyToSell * (estimatedPrice - batch.cost_per_unit);
+          totalProfit += qtyToSell * (sale.sold_price - batch.cost_per_unit);
+
+          console.log(totalCOGS)
+          console.log(totalProfit)
 
           batch.quantity -= qtyToSell;
           sale.quantity -= qtyToSell;

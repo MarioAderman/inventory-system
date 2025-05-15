@@ -353,14 +353,14 @@ app.delete('/api/sales/:id', async (req, res) => {
 app.get('/api/inventory-value', async (req, res) => {
   try {
     const purchasesRes = await pool.query(
-      `SELECT product_code, batch_id, quantity, cost_per_unit, purchase_date 
+      `SELECT product_code, batch_id, quantity, cost_per_unit, purchase_date, original_quantity 
        FROM purchases 
        WHERE is_deleted = false 
        ORDER BY purchase_date ASC`
     );
 
     const salesRes = await pool.query(
-      `SELECT product_code, quantity, sale_date 
+      `SELECT product_code, quantity, sold_price, sale_date 
        FROM sales 
        WHERE is_deleted = false 
        ORDER BY sale_date ASC`
@@ -379,7 +379,8 @@ app.get('/api/inventory-value', async (req, res) => {
       fifoData[p.product_code].purchases.push({ 
         batch_id: p.batch_id, 
         quantity: p.quantity, 
-        cost_per_unit: p.cost_per_unit 
+        cost_per_unit: p.cost_per_unit,
+        original_quantity : p.original_quantity
       });
     }
 
